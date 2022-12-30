@@ -9,7 +9,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/contact", (req, res) => {
-  res.send("<div>Список сонтактів</div>");
+  res.send(``);
 });
 
 app.listen(3000, () => {
