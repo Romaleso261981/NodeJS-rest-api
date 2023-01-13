@@ -1,5 +1,18 @@
-const app = require('./app');
+const mongoose = require('mongoose');
+mongoose.set('strictQuery', true);
+const dotenv = require('dotenv');
+dotenv.config();
 
-app.listen(3000, () => {
-  console.log('Server running. Use our API on port: 3000');
-});
+const { HOST_URI } = process.env;
+
+async function main() {
+  console.log(HOST_URI);
+  try {
+    await mongoose.connect(HOST_URI);
+    console.log('Connected to mongodb');
+  } catch (error) {
+    console.error('error while connection to mongodb', error.message);
+    process.exit(1);
+  }
+}
+main();

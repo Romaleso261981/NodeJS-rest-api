@@ -1,5 +1,7 @@
 ## GoIT Node.js Course Template Homework
 
+<!--MONGO DB password 'U1RT1pSFRMqgknAf' -->
+
 Виконайте форк цього репозиторію для виконання домашніх завдань (2-6)
 Форк створить репозиторій на вашому http://github.com
 
@@ -9,7 +11,7 @@
 
 - hw02
 - hw03
-- hw04
+- hw04  
 - hw05
 - hw06
 
