@@ -1,60 +1,36 @@
-const fs = require('fs/promises');
-const { nanoid } = require('nanoid');
-const path = require('path');
-
-const contactsPath = path.join(__dirname, 'contacts.json');
-
-const updateContacts = async contacts => {
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-};
+const { Contact } = require("../utils/schema/contactsSchema");
+require("dotenv").config();
 
 const listContacts = async () => {
-  const data = await fs.readFile(contactsPath);
-  return JSON.parse(data);
+  return await Contact.find();
 };
 
-const getContactById = async contactId => {
-  const contacts = await listContacts();
-  const result = contacts.find(contact => contact.id === contactId);
-  if (!result) {
-    return null;
-  }
-  return result;
+const getContactById = async (contactId) => {
+  const contactsList = await listContacts();
+  const contact = contactsList.find((item) => item.id === contactId);
+  return contact;
 };
 
-const removeContact = async contactId => {
-  const contacts = await listContacts();
-  const idx = contacts.findIndex(contact => contact.id === contactId);
-  if (idx === -1) {
-    return null;
-  }
-  const [removeContact] = contacts.splice(idx, 1);
-  updateContacts(contacts);
-  return removeContact;
+const removeContact = async (contactId) => {
+  return await Contact.deconsteOne({ _id: { $eq: contactId } });
 };
 
-const addContact = async body => {
-  const contacts = await listContacts();
-  const newContact = {
-    id: nanoid(),
-    name: body.name,
-    email: body.email,
-    phone: body.phone,
-  };
-  contacts.push(newContact);
-  await updateContacts(contacts);
-  return newContact;
+const addContact = async ({ name, email, phone }) => {
+  const contact = await Contact.create({
+    name,
+    email,
+    phone,
+  });
+  return contact;
 };
 
-const updateContact = async (id, { name, email, phone }) => {
-  const contacts = await listContacts();
-  const idx = contacts.findIndex(item => item.id === id);
-  if (idx === -1) {
-    return null;
-  }
-  contacts[idx] = { id, name, email, phone };
-  await updateContacts(contacts);
-  return contacts[idx];
+const updateContact = async (contactId, body) => {
+  await Contact.updateOne({ _id: { $eq: contactId } }, { ...body });
+  return { message: "Contact updated succesfully" };
+};
+
+const updateFavorite = async (contactId, body) => {
+  await Contact.updateOne({ _id: { $eq: contactId } }, { ...body });
 };
 
 module.exports = {
@@ -63,4 +39,5 @@ module.exports = {
   removeContact,
   addContact,
   updateContact,
+  updateFavorite,
 };

@@ -44,7 +44,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.deconste('/:contactId', async (req, res, next) => {
+router.delete('/:contactId', async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const contacts = await removeContact(contactId);
