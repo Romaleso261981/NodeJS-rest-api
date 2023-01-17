@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
 dotenv.config();
+mongoose.set('debug', true);
 mongoose.set('strictQuery', true);
 
 const { HOST_URI } = process.env;

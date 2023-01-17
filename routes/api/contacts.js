@@ -1,21 +1,26 @@
 const express = require('express');
 
-const movieController = require('../../controllers/contacts.controller');
+const {
+  getAll,
+  addContact,
+  deleteById,
+  updateById,
+  findOneById,
+} = require('../../controllers/contacts.controller');
 const { tryCatchWrapper } = require('../../helpers');
-// const { createNotFoundHttpError } = require('../helpers');
 
 const router = express.Router();
 
-router.get('/', tryCatchWrapper(movieController.getAll));
+router.get('/', tryCatchWrapper(getAll));
 
-router.get('/:contactId', tryCatchWrapper(movieController.findOneById));
+router.get('/:contactId', tryCatchWrapper(findOneById));
 
-router.post('/', tryCatchWrapper(movieController.create));
+router.post('/', tryCatchWrapper(addContact));
 
-router.delete('/:contactId', tryCatchWrapper(movieController.deleteById));
+router.delete('/:contactId', tryCatchWrapper(deleteById));
 
-router.put('/:contactId', tryCatchWrapper(movieController.getAll));
+router.put('/:contactId', tryCatchWrapper(updateById));
 
-router.patch('/:contactId', tryCatchWrapper(movieController.getAll));
+router.patch('/:contactId', tryCatchWrapper(updateById));
 
 module.exports = router;
