@@ -11,7 +11,6 @@ async function getAll(req, res) {
 
 async function findOneById(req, res, next) {
   const { id } = req.params;
-  console.log(id);
   const contact = await Contact.findById(id);
 
   if (!contact) {
@@ -31,10 +30,20 @@ async function deleteById(req, res, next) {
 }
 
 const addContact = async (req, res) => {
-  const data = req.body;
-  const newContact = await Contact.create(data.value);
+  const { name, email, phone } = req.body;
+
+  const newContact = await Contact.create(name, email, phone);
   res.status(201).json(newContact);
 };
+
+// const addContact = async ({ name, email, phone }) => {
+//     const contact = await Contact.create({
+//       name,
+//       email,
+//       phone,
+//     });
+//     return contact;
+//   };
 
 const updateById = async (req, res) => {
   const { contactId } = req.params;
