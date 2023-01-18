@@ -31,10 +31,8 @@ async function deleteById(req, res, next) {
 }
 
 const addContact = async (req, res) => {
-  const { title } = req.body;
-  const newContact = await Contact.create({
-    title,
-  });
+  const data = req.body;
+  const newContact = await Contact.create(data.value);
   res.status(201).json(newContact);
 };
 
