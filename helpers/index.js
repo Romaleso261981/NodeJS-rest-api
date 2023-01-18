@@ -1,20 +1,20 @@
-function tryCatchWrapper(endpointFn) {
+function tryCatchWrapper(enpointFn) {
   return async (req, res, next) => {
     try {
-      await endpointFn(req, res, next);
-    } catch (err) {
-      next(err);
+      await enpointFn(req, res, next);
+    } catch (error) {
+      return next(error);
     }
   };
 }
 
-function createNotFoundHttpError() {
-  const err = new Error('Not Found');
-  err.status = 404;
+function HttpError(status, message) {
+  const err = new Error(message);
+  err.status = status;
   return err;
 }
 
 module.exports = {
   tryCatchWrapper,
-  createNotFoundHttpError,
+  HttpError,
 };

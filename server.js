@@ -22,29 +22,3 @@ async function main() {
   } catch (error) {}
 }
 main();
-
-// const connectMongo = async () => {
-//   mongoose
-//     .connect(HOST_URI, {
-//       useNewUrlParser: true,
-//       useUnifiedTopology: true,
-//     })
-//     .then(() => {
-//       app.listen(PORT, err => {
-//         if (err) {
-//           console.log('Error ', err);
-//         }
-//         console.log(`Server is running. Use our API on port: ${PORT}`);
-//       });
-//       console.log('Database connection successful');
-//     })
-//     .catch(err => {
-//       console.error(err);
-//       process.exit(1);
-//     });
-// };
-
-// const start = async () => {
-//   await connectMongo();
-// };
-// start();
