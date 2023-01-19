@@ -1,26 +1,26 @@
 const express = require('express');
-// const contact = require('../../models/contacts.json');
+
+const {
+  getAll,
+  addContact,
+  deleteById,
+  updateById,
+  findOneById,
+} = require('../../controllers/contacts.controller');
+const { tryCatchWrapper } = require('../../helpers');
 
 const router = express.Router();
 
-router.get('/', async (req, res, next) => {
-  res.json({ message: 'template getAll message' });
-});
+router.get('/', tryCatchWrapper(getAll));
 
-router.get('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template get contactId message' });
-});
+router.get('/:contactId', tryCatchWrapper(findOneById));
 
-router.post('/', async (req, res, next) => {
-  res.json({ message: 'template postAll  message' });
-});
+router.post('/', tryCatchWrapper(addContact));
 
-router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template delete contactId message' });
-});
+router.delete('/:contactId', tryCatchWrapper(deleteById));
 
-router.put('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template put contactId message' });
-});
+router.put('/:contactId', tryCatchWrapper(updateById));
+
+router.patch('/:contactId', tryCatchWrapper(updateById));
 
 module.exports = router;
