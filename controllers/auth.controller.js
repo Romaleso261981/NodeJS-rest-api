@@ -6,20 +6,14 @@ const { JWT_TOKEN } = process.env;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
-  const userMailCheck = await User.findOne({ email });
-
-  if (userMailCheck) {
-    console.log(`Email ${email} in use`);
-  }
-  const newUser = new User({ email });
-  await newUser.setPassword(password);
-  await newUser.save();
+  const savedUser = await User.create({
+    email,
+    password,
+  });
 
   res.status(201).json({
-    code: 201,
-    user: {
-      email,
-      subscription: newUser.subscription,
+    data: {
+      user: savedUser,
     },
   });
 };

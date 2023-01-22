@@ -1,22 +1,24 @@
 const express = require('express');
-const logger = require('morgan');
+// const logger = require('morgan');
 const cors = require('cors');
+const morgan = require('morgan');
 
 const contactsRouter = require('./routes/api/contacts');
 const { authRouter } = require('./routes/api/auth');
-const { userRouter } = require('./routes/api/user');
+// const { userRouter } = require('./routes/api/user');
 
 const app = express();
 
-const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
+// const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
-app.use(logger(formatsLogger));
+// app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
+app.use(morgan('dev'));
 
 app.use('/contacts', contactsRouter);
-app.use('/api/auth', authRouter);
-app.use('/api/users', userRouter);
+app.use('/auth', authRouter);
+// app.use('/api/users', userRouter);
 
 app.use((_, res) => {
   res.status(404).json({ message: 'Not found' });
