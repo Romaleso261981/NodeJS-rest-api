@@ -1,11 +1,11 @@
 const express = require('express');
-const { tryCatchWrapper } = require('../../helpers/index');
+const { tryCatchWrapper } = require('../../helpers/index.js');
 const {
   createMovie,
   getMovies,
   me,
 } = require('../../controllers/user.controller');
-const { auth } = require('../middlewares');
+const { auth } = require('../../middlewares/index');
 const userRouter = express.Router();
 
 userRouter.post('/movies', tryCatchWrapper(auth), tryCatchWrapper(createMovie));
