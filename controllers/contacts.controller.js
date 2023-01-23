@@ -1,5 +1,5 @@
 const { Contact } = require('../models/contactsSchema');
-const { HttpError } = require('../helpers');
+const { HttpError } = require('../helpers/errors');
 
 async function getAll(req, res) {
   const { limit } = req.query;
