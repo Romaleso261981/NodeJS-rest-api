@@ -10,7 +10,7 @@ const contactSchema = new Schema(
     },
     email: {
       type: String,
-      default: 'Lesyo',
+      default: 'ladiginscormag@gmail.com',
     },
     phone: {
       type: String,

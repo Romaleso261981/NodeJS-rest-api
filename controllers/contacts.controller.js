@@ -1,30 +1,23 @@
 const { Contact } = require('../models/contactsSchema');
 const { HttpError } = require('../helpers/errors');
 
-const listContacts = async () => {
+async function listContacts() {
   return await Contact.find();
-};
+}
 
-async function getAll(req, res) {
-  const { limit } = req.query;
-  const contact = await Contact.find().limit(limit);
-  console.log(contact);
-  return res.json({
-    message: 'Contact updated succesfully',
-    data: contact,
-  });
+async function getAll(_, res) {
+  const contact = await listContacts();
+  if (!contact) {
+    return res.status(200);
+  }
+  return res.status(200).json(contact);
 }
 
 async function findOneById(req, res, next) {
-  const contactsList = await listContacts();
-
   const { id } = req.params;
+  const contactsList = await listContacts();
   const contact = contactsList.find(item => item.id === id);
-
-  if (!contact) {
-    return next(HttpError(404, 'Contact not found'));
-  }
-  return res.json(contact);
+  return contact;
 }
 
 async function deleteById(req, res, next) {
@@ -37,21 +30,24 @@ async function deleteById(req, res, next) {
   return next(HttpError(404, 'Contact not found'));
 }
 
-const addContact = async (req, res) => {
-  const { name, email, phone } = req.body;
+async function addContact(req, res) {
+  const { name, email, phone } = req.body.value;
+  const contact = await Contact.create({
+    name,
+    email,
+    phone,
+  });
+  return contact;
+}
 
-  const newContact = await Contact.create(name, email, phone);
-  res.status(201).json(newContact);
-};
-
-const updateById = async (req, res) => {
+async function updateById(req, res) {
   const { contactId } = req.params;
   const updatedContact = await Contact.findByIdAndUpdate(contactId, req.body, {
     new: true,
   });
 
   return res.json({ data: { movie: updatedContact } });
-};
+}
 
 module.exports = {
   getAll,
