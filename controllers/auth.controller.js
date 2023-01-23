@@ -5,10 +5,8 @@ const { User } = require('../models/userSchema');
 const { HttpError } = require('../helpers/errors');
 
 const register = async (req, res, next) => {
-  console.log('oknifovnkofd');
   // try {
   //   const user = await findUserByEmail(req.body.email);
-
   //   if (user) {
   //     throw new HttpError(409, 'Email is in use');
   //   }

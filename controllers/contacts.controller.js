@@ -1,17 +1,25 @@
 const { Contact } = require('../models/contactsSchema');
 const { HttpError } = require('../helpers/errors');
 
+const listContacts = async () => {
+  return await Contact.find();
+};
+
 async function getAll(req, res) {
   const { limit } = req.query;
   const contact = await Contact.find().limit(limit);
+  console.log(contact);
   return res.json({
+    message: 'Contact updated succesfully',
     data: contact,
   });
 }
 
 async function findOneById(req, res, next) {
+  const contactsList = await listContacts();
+
   const { id } = req.params;
-  const contact = await Contact.findById(id);
+  const contact = contactsList.find(item => item.id === id);
 
   if (!contact) {
     return next(HttpError(404, 'Contact not found'));
@@ -35,15 +43,6 @@ const addContact = async (req, res) => {
   const newContact = await Contact.create(name, email, phone);
   res.status(201).json(newContact);
 };
-
-// const addContact = async ({ name, email, phone }) => {
-//     const contact = await Contact.create({
-//       name,
-//       email,
-//       phone,
-//     });
-//     return contact;
-//   };
 
 const updateById = async (req, res) => {
   const { contactId } = req.params;
