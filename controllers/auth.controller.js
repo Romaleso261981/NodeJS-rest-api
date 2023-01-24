@@ -1,21 +1,36 @@
 // const { createUser, findUserByEmail } = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const { Conflict } = require('http-errors');
 const { User } = require('../models/userSchema');
 const { HttpError } = require('../helpers/errors');
 
-const register = async (req, res, next) => {
-  // try {
-  //   const user = await findUserByEmail(req.body.email);
-  //   if (user) {
-  //     throw new HttpError(409, 'Email is in use');
-  //   }
-  //   const { email } = await createUser(req.body);
-  //   res.status(201).json({ user: email });
-  // } catch (error) {
-  //   next(error);
-  // }
-};
+async function register(req, res, next) {
+  const { email, password } = req.body;
+
+  try {
+    const savedUser = await User.create({
+      email,
+      password: password,
+    });
+
+    res.status(201).json({
+      data: {
+        user: {
+          email,
+          id: savedUser._id,
+        },
+      },
+    });
+  } catch (error) {
+    if (error.message.includes('E11000 duplicate key error')) {
+      // throw new HttpError(409, "User with this email already exists");
+      throw Conflict('User with this email already exists!');
+    }
+
+    throw error;
+  }
+}
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
