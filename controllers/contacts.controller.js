@@ -20,6 +20,16 @@ async function findOneById(req, res, next) {
   return contact;
 }
 
+// async function getMovie(req, res, next) {
+//   const { id } = req.params;
+//   const movie = await Movie.findById(id);
+
+//   if (!movie) {
+//     return next(HttpError(404, "Movie not found"));
+//   }
+//   return res.json(movie);
+// }
+
 async function deleteById(req, res, next) {
   const { Id } = req.params;
   const contact = await Contact.findById(Id);
@@ -30,14 +40,14 @@ async function deleteById(req, res, next) {
   return next(HttpError(404, 'Contact not found'));
 }
 
-async function addContact(req, res) {
-  const { name, email, phone } = req.body.value;
-  const contact = await Contact.create({
+async function addContact(req, res, next) {
+  const { name, email, phone } = req.body;
+  const newContact = await Contact.create({
     name,
     email,
     phone,
   });
-  return contact;
+  res.status(201).json(newContact);
 }
 
 async function updateById(req, res) {

@@ -1,5 +1,5 @@
 // const { createUser, findUserByEmail } = require('../models/user');
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { Conflict } = require('http-errors');
 const { User } = require('../models/userSchema');
@@ -8,10 +8,13 @@ const { HttpError } = require('../helpers/errors');
 async function register(req, res, next) {
   const { email, password } = req.body;
 
+  const salt = await bcrypt.genSalt();
+  const hashedPassword = await bcrypt.hash(password, salt);
+
   try {
     const savedUser = await User.create({
       email,
-      password: password,
+      password: hashedPassword,
     });
 
     res.status(201).json({
@@ -31,9 +34,9 @@ async function register(req, res, next) {
     throw error;
   }
 }
-const login = async (req, res, next) => {
+async function login(req, res, next) {
   try {
-    const { email, password } = req.body;
+    const { email } = req.body;
 
     const storedUser = await User.findOne({
       email,
@@ -42,38 +45,38 @@ const login = async (req, res, next) => {
       throw new HttpError(401, 'email or password is not valid');
     }
 
-    const isPasswordValid = await bcrypt.compare(password, storedUser.password);
+    // const isPasswordValid = await bcrypt.compare(password, storedUser.password);
 
-    if (!isPasswordValid) {
-      throw new HttpError(401, 'email or password is not valid');
-    }
-    const token = jwt.sign({ id: storedUser._id }, process.env.JWT_SECRET, {
-      expiresIn: '12h',
-    });
-    await User.findByIdAndUpdate(storedUser._id, { token });
-    return res.status(201).json({
-      token: token,
-      user: {
-        email: email,
-        subscription: storedUser.subscription,
-      },
-    });
+    // if (!isPasswordValid) {
+    //   throw new HttpError(401, 'email or password is not valid');
+    // }
+    // const token = jwt.sign({ id: storedUser._id }, process.env.JWT_SECRET, {
+    //   expiresIn: '12h',
+    // });
+    //   await User.findByIdAndUpdate(storedUser._id, { token });
+    //   return res.status(201).json({
+    //     token: token,
+    //     user: {
+    //       email: email,
+    //       subscription: storedUser.subscription,
+    //     },
+    //   });
   } catch (error) {
-    next(error);
+    //   next(error);
   }
-};
-const logoutController = async (req, res) => {
+}
+async function logoutController(req, res) {
   const { _id } = req.user;
   await User.findByIdAndUpdate(_id, { token: null });
   res.sendStatus(204);
-};
-const currentUserController = async (req, res) => {
+}
+async function currentUserController(req, res) {
   const { email, subscription } = req.user;
   return res.status(200).json({
     email,
     subscription,
   });
-};
+}
 module.exports = {
   register,
   login,
