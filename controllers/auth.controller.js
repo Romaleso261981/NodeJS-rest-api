@@ -1,9 +1,10 @@
 // const { createUser, findUserByEmail } = require('../models/user');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { Conflict } = require('http-errors');
 const { User } = require('../models/userSchema');
 const { HttpError } = require('../helpers/errors');
+const { JWT_SECRET } = process.env;
 
 async function register(req, res, next) {
   const { email, password } = req.body;
@@ -35,36 +36,30 @@ async function register(req, res, next) {
   }
 }
 async function login(req, res, next) {
-  try {
-    const { email } = req.body;
+  const { email, password } = req.body;
 
-    const storedUser = await User.findOne({
-      email,
-    });
-    if (!storedUser) {
-      throw new HttpError(401, 'email or password is not valid');
-    }
-
-    // const isPasswordValid = await bcrypt.compare(password, storedUser.password);
-
-    // if (!isPasswordValid) {
-    //   throw new HttpError(401, 'email or password is not valid');
-    // }
-    // const token = jwt.sign({ id: storedUser._id }, process.env.JWT_SECRET, {
-    //   expiresIn: '12h',
-    // });
-    //   await User.findByIdAndUpdate(storedUser._id, { token });
-    //   return res.status(201).json({
-    //     token: token,
-    //     user: {
-    //       email: email,
-    //       subscription: storedUser.subscription,
-    //     },
-    //   });
-  } catch (error) {
-    //   next(error);
+  const storedUser = await User.findOne({
+    email,
+  });
+  if (!storedUser) {
+    throw new HttpError(401, 'email or password is not valid');
   }
+
+  const isPasswordValid = await bcrypt.compare(password, storedUser.password);
+
+  if (!isPasswordValid) {
+    throw new HttpError(401, 'email or password is not valid');
+  }
+  const payload = { id: storedUser._id };
+  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+
+  return res.json({
+    data: {
+      token,
+    },
+  });
 }
+
 async function logoutController(req, res) {
   const { _id } = req.user;
   await User.findByIdAndUpdate(_id, { token: null });
