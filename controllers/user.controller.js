@@ -15,12 +15,12 @@ async function createContact(req, res, next) {
 }
 
 async function getContact(req, res, next) {
-  // const { user } = req;
-  // const userWithMovies = await User.findById(user._id).populate('movies', {
-  //   title: 1,
-  //   year: 1,
-  //   _id: 1,
-  // });
+  const { user } = req;
+  const userWithMovies = await User.findById(user._id).populate('movies', {
+    title: 1,
+    year: 1,
+    _id: 1,
+  });
 
   return res.status(200).json({
     data: {
