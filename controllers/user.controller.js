@@ -1,30 +1,30 @@
-const { User } = require('../models/user');
+// const { User } = require('../models/userSchema');
 
-async function createMovie(req, res, next) {
-  const { user } = req;
-  const { id: movieId } = req.body;
+async function createContact(req, res, next) {
+  // const { user } = req;
+  // const { id: movieId } = req.body;
 
-  user.movies.push({ _id: movieId });
-  await User.findByIdAndUpdate(user._id, user);
+  // user.movies.push({ _id: movieId });
+  // await User.findByIdAndUpdate(user._id, user);
 
   return res.status(201).json({
     data: {
-      movies: user.movies,
+      ok: true,
     },
   });
 }
 
-async function getMovies(req, res, next) {
-  const { user } = req;
-  const userWithMovies = await User.findById(user._id).populate('movies', {
-    title: 1,
-    year: 1,
-    _id: 1,
-  });
+async function getContact(req, res, next) {
+  // const { user } = req;
+  // const userWithMovies = await User.findById(user._id).populate('movies', {
+  //   title: 1,
+  //   year: 1,
+  //   _id: 1,
+  // });
 
   return res.status(200).json({
     data: {
-      movies: userWithMovies.movies,
+      ok: false,
     },
   });
 }
@@ -44,7 +44,7 @@ async function me(req, res, next) {
 }
 
 module.exports = {
-  createMovie,
-  getMovies,
+  createContact,
+  getContact,
   me,
 };

@@ -20,16 +20,6 @@ async function findOneById(req, res, next) {
   return contact;
 }
 
-// async function getMovie(req, res, next) {
-//   const { id } = req.params;
-//   const movie = await Movie.findById(id);
-
-//   if (!movie) {
-//     return next(HttpError(404, "Movie not found"));
-//   }
-//   return res.json(movie);
-// }
-
 async function deleteById(req, res, next) {
   const { Id } = req.params;
   const contact = await Contact.findById(Id);
