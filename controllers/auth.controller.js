@@ -1,10 +1,10 @@
 // const { createUser, findUserByEmail } = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { Conflict } = require('http-errors');
+const { Conflict, Unauthorized } = require('http-errors');
 const { User } = require('../models/userSchema');
-const { HttpError } = require('../helpers/errors');
-const { JWT_SECRET } = process.env;
+
+// const { JWT_SECRET } = process.env;
 
 async function register(req, res, next) {
   const { email, password } = req.body;
@@ -28,7 +28,6 @@ async function register(req, res, next) {
     });
   } catch (error) {
     if (error.message.includes('E11000 duplicate key error')) {
-      // throw new HttpError(409, "User with this email already exists");
       throw Conflict('User with this email already exists!');
     }
 
@@ -42,20 +41,20 @@ async function login(req, res, next) {
     email,
   });
   if (!storedUser) {
-    throw new HttpError(401, 'email or password is not valid');
+    throw Unauthorized('email is not valid');
   }
 
   const isPasswordValid = await bcrypt.compare(password, storedUser.password);
 
   if (!isPasswordValid) {
-    throw new HttpError(401, 'email or password is not valid');
+    throw Unauthorized('password is not valid');
   }
   const payload = { id: storedUser._id };
-  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign(payload, process.env.JWT_SECRET);
 
   return res.json({
     data: {
-      token,
+      token: token,
     },
   });
 }

@@ -5,6 +5,7 @@ const cors = require('cors');
 const contactsRouter = require('./routes/api/contacts');
 const { authRouter } = require('./routes/api/auth');
 const { errorHandler } = require('./helpers/helpers');
+const { userRouter } = require('./routes/user');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 
 app.use('/contacts', contactsRouter);
 app.use('/auth', authRouter);
+app.use('/api/users', userRouter);
 
 app.use(errorHandler);
 
