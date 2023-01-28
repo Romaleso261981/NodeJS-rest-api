@@ -13,11 +13,11 @@ const router = express.Router();
 
 router.get('/', tryCatchWrapper(getAll));
 
-router.get('/:contactId', tryCatchWrapper(findOneById));
+router.get('/:id', tryCatchWrapper(findOneById));
 
 router.post('/', tryCatchWrapper(addContact));
 
-router.delete('/:contactId', tryCatchWrapper(deleteById));
+router.delete('/:id', tryCatchWrapper(deleteById));
 
 router.put('/:contactId', tryCatchWrapper(updateById));
 
