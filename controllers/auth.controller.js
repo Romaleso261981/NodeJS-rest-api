@@ -4,8 +4,6 @@ const bcrypt = require('bcryptjs');
 const { Conflict, Unauthorized } = require('http-errors');
 const { User } = require('../models/userSchema');
 
-// const { JWT_SECRET } = process.env;
-
 async function register(req, res, next) {
   const { email, password } = req.body;
 
@@ -50,7 +48,7 @@ async function login(req, res, next) {
     throw Unauthorized('password is not valid');
   }
   const payload = { id: storedUser._id };
-  const token = jwt.sign(payload, process.env.JWT_SECRET);
+  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
 
   return res.json({
     data: {

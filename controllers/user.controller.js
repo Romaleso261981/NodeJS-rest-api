@@ -1,30 +1,32 @@
-// const { User } = require('../models/userSchema');
+const { User } = require('../models/userSchema');
 
 async function createContact(req, res, next) {
-  // const { user } = req;
-  // const { id: movieId } = req.body;
+  const { user } = req;
+  const { id: contactId } = req.body;
+  console.log(contactId);
+  console.log(user);
 
-  // user.movies.push({ _id: movieId });
-  // await User.findByIdAndUpdate(user._id, user);
+  user.contact.push({ _id: contactId });
+  await User.findByIdAndUpdate(user._id, user);
 
   return res.status(201).json({
     data: {
-      ok: true,
+      contact: user.contact,
     },
   });
 }
 
 async function getContact(req, res, next) {
   const { user } = req;
-  const userWithMovies = await User.findById(user._id).populate('movies', {
-    title: 1,
-    year: 1,
-    _id: 1,
+  const userWithContact = await User.findById(user._id).populate('contact', {
+    phone: 1,
+    name: 1,
+    email: 1,
   });
 
-  return res.status(200).json({
+  res.status(200).json({
     data: {
-      ok: false,
+      contacts: userWithContact.contact,
     },
   });
 }

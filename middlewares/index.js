@@ -1,14 +1,14 @@
-const { HttpError } = require('../helpers/helpers');
+const { Unauthorized, BadRequest } = require('http-errors');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/userSchema');
 
-const { JWT_SECRET } = process.env;
+// const { JWT_SECRET } = process.env;
 
 function validateBody(schema) {
   return (req, res, next) => {
     const { error } = schema.validate(req.body);
     if (error) {
-      return next(HttpError(400, error.message));
+      throw BadRequest();
     }
 
     return next();
@@ -20,24 +20,23 @@ async function auth(req, res, next) {
   const [type, token] = authHeader.split(' ');
 
   if (type !== 'Bearer') {
-    throw HttpError(401, 'token type is not valid');
+    throw Unauthorized('token type is not valid');
   }
 
   if (!token) {
-    throw HttpError(401, 'no token provided');
+    throw Unauthorized('no token provided');
   }
 
   try {
-    const { id } = jwt.verify(token, JWT_SECRET);
+    const { id } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(id);
-
     req.user = user;
   } catch (error) {
     if (
       error.name === 'TokenExpiredError' ||
       error.name === 'JsonWebTokenError'
     ) {
-      throw HttpError(401, 'jwt token is not valid');
+      throw Unauthorized('jwt token is not valid');
     }
     throw error;
   }

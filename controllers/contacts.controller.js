@@ -1,8 +1,10 @@
 const { Contact } = require('../models/contactsSchema');
 const { HttpError } = require('../helpers/errors');
 
-async function listContacts() {
-  return await Contact.find();
+async function listContacts(req, res) {
+  const { limit = 5, page = 1 } = req.query;
+  const skip = (page - 1) * limit;
+  return await Contact.find().skip(skip).limit(limit);
 }
 
 async function getAll(_, res) {
