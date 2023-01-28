@@ -1,9 +1,5 @@
 const { Contact } = require('../models/contactsSchema');
-const { HttpError } = require('../helpers/errors');
-
-async function listContacts() {
-  return await Contact.find();
-}
+const { NotFound } = require('http-errors');
 
 async function getAll(req, res) {
   const { limit = 5, page = 1 } = req.query;
@@ -16,10 +12,13 @@ async function getAll(req, res) {
 }
 
 async function findOneById(req, res, next) {
-  const { id } = req.params;
-  const contactsList = await listContacts();
-  const contact = contactsList.find(item => item.id === id);
-  return contact;
+  const { Id } = req.params;
+  const contact = await Contact.findById(Id);
+  if (contact) {
+    // await Contact.findByIdAndDelete(Id);
+    return res.json({ data: { contact } });
+  }
+  return NotFound('Contact not found');
 }
 
 async function deleteById(req, res, next) {
@@ -27,9 +26,9 @@ async function deleteById(req, res, next) {
   const contact = await Contact.findById(Id);
   if (contact) {
     await Contact.findByIdAndDelete(Id);
-    return res.json({ data: { Contact } });
+    return res.json({ data: { contact } });
   }
-  return next(HttpError(404, 'Contact not found'));
+  return NotFound('Contact not found');
 }
 
 async function addContact(req, res, next) {
