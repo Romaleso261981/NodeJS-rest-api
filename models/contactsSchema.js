@@ -1,24 +1,26 @@
-const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const Schema = mongoose.Schema;
+const Contactschema = Schema;
 
-const contactSchema = new Schema(
+const contactSchema = new Contactschema(
   {
     name: {
       type: String,
-      default: 'Roma',
+      required: [true, 'Set name for contact'],
     },
     email: {
       type: String,
-      default: 'Lesyo',
     },
     phone: {
       type: String,
-      default: '0689478723',
     },
     favorite: {
       type: Boolean,
       default: false,
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
     },
   },
   {
@@ -27,7 +29,7 @@ const contactSchema = new Schema(
   }
 );
 
-const Contact = mongoose.model('contact', contactSchema);
+const Contact = model('contact', contactSchema);
 module.exports = {
   Contact,
 };

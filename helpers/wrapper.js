@@ -3,18 +3,12 @@ function tryCatchWrapper(enpointFn) {
     try {
       await enpointFn(req, res, next);
     } catch (error) {
+      console.log('ndefononb');
       return next(error);
     }
   };
 }
 
-function HttpError(status, message) {
-  const err = new Error(message);
-  err.status = status;
-  return err;
-}
-
 module.exports = {
   tryCatchWrapper,
-  HttpError,
 };

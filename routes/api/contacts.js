@@ -7,7 +7,7 @@ const {
   updateById,
   findOneById,
 } = require('../../controllers/contacts.controller');
-const { tryCatchWrapper } = require('../../helpers');
+const { tryCatchWrapper } = require('../../helpers/wrapper');
 
 const router = express.Router();
 
