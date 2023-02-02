@@ -2,17 +2,16 @@ const { User } = require('../models/userSchema');
 
 async function createContact(req, res, next) {
   const { user } = req;
-  const { id: contactId } = req.body;
-  console.log(contactId);
-  console.log(user);
+  const { _id } = user;
+  const { name, email, phone } = req.body;
 
-  user.contact.push({ _id: contactId });
-  await User.findByIdAndUpdate(user._id, user);
+  user.contact.push({ name, email, phone });
+  await User.findByIdAndUpdate(_id, user);
 
   return res.status(201).json({
-    data: {
-      contact: user.contact,
-    },
+    name,
+    email,
+    phone,
   });
 }
 
