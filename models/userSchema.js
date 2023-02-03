@@ -19,7 +19,7 @@ const userSchema = new Schema(
       default: 'starter',
     },
     token: String,
-    contact: [mongoose.Types.ObjectId],
+    contact: [{ type: mongoose.Types.ObjectId }],
   },
   {
     timestamps: true, // adds createdAt and updatedAt fields

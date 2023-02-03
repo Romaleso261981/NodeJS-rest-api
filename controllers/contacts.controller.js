@@ -1,5 +1,7 @@
 const { Contact } = require('../models/contactsSchema');
 const { HttpError } = require('../helpers/errors');
+const path = require('path');
+const fs = require('fs/promises');
 
 async function getAll(req, res) {
   const { limit = 5, page = 1 } = req.query;
@@ -29,13 +31,6 @@ async function deleteById(req, res, next) {
   }
   await Contact.findByIdAndRemove(id);
   return res.status(200).json(contact);
-  // const { Id } = req.params;
-  // const contact = await Contact.findById(Id);
-  // if (contact) {
-  //   await Contact.findByIdAndDelete(Id);
-  //   return res.json({ data: { Contact } });
-  // }
-  // return next(HttpError(404, 'Contact not found'));
 }
 
 async function addContact(req, res, next) {
@@ -57,10 +52,36 @@ async function updateById(req, res) {
   return res.json({ data: { movie: updatedContact } });
 }
 
+async function uploadImage(req, res, next) {
+  console.log('req.file', req.file);
+  const { filename } = req.file;
+  const tmpPath = path.resolve(__dirname, '../tmp', filename);
+  const publicPath = path.resolve(__dirname, '../public', filename);
+  try {
+    await fs.rename(tmpPath, publicPath);
+  } catch (error) {
+    await fs.unlink(tmpPath);
+    throw error;
+  }
+
+  const movieId = req.params.id;
+
+  const movie = await Contact.findById(movieId);
+  movie.image = `/public/${filename}`;
+  await movie.save();
+
+  return res.json({
+    data: {
+      image: movie.image,
+    },
+  });
+}
+
 module.exports = {
   getAll,
   addContact,
   deleteById,
   updateById,
   findOneById,
+  uploadImage,
 };
