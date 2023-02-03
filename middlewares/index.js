@@ -1,8 +1,10 @@
 const { Unauthorized, BadRequest } = require('http-errors');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/userSchema');
+const multer = require('multer');
+const path = require('path');
 
-// const { JWT_SECRET } = process.env;
+const { JWT_SECRET } = process.env;
 
 function validateBody(schema) {
   return (req, res, next) => {
@@ -28,7 +30,7 @@ async function auth(req, res, next) {
   }
 
   try {
-    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+    const { id } = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(id);
     req.user = user;
   } catch (error) {
@@ -44,7 +46,22 @@ async function auth(req, res, next) {
   next();
 }
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.resolve(__dirname, '../tmp'));
+  },
+  filename: function (req, file, cb) {
+    cb(null, Math.random() + file.originalname);
+  },
+});
+
+const upload = multer({
+  storage,
+  // limits: {},
+});
+
 module.exports = {
   validateBody,
   auth,
+  upload,
 };
