@@ -1,19 +1,58 @@
 const { User } = require('../models/userSchema');
+const { Contact } = require('../models/contactsSchema');
 
 async function createContact(req, res, next) {
   const { user } = req;
-  const { _id } = user;
   const { name, email, phone } = req.body;
-
-  user.contact.push({ name, email, phone });
-  await User.findByIdAndUpdate(_id, user);
-
-  return res.status(201).json({
+  const newContact = await Contact.create({
     name,
     email,
     phone,
   });
+
+  const { _id: ID } = newContact;
+  user.contact.push({ _id: ID });
+
+  const updatedUser = await User.findByIdAndUpdate(user._id, user, {
+    new: true,
+  }).select({
+    contact: 1,
+    _id: 0,
+  });
+
+  console.log('updatedUser', updatedUser);
+
+  return res.status(201).json({
+    data: {
+      contact: updatedUser.contact,
+    },
+  });
 }
+
+// async function createContact(req, res, next) {
+//   const { name, email, phone } = req.body;
+//   const newContact = await Contact.create({
+//     name,
+//     email,
+//     phone,
+//   });
+
+//   User.contact.push({ _id: newContact._id });
+
+//   res.status(201).json(User.contact);
+// }
+// async function createContact(req, res, next) {
+//   const { name, email, phone } = req.body;
+//   const newContact = await Contact.create({
+//     name,
+//     email,
+//     phone,
+//   });
+
+//   User.contact.push({ _id: newContact._id });
+
+//   res.status(201).json(User.contact);
+// }
 
 async function getContact(req, res, next) {
   const { user } = req;

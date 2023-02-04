@@ -5,7 +5,7 @@ const multer = require('multer');
 const path = require('path');
 
 const { JWT_SECRET } = process.env;
-
+const tempDir = path.join(__dirname, '../', 'temp');
 function validateBody(schema) {
   return (req, res, next) => {
     const { error } = schema.validate(req.body);
@@ -48,16 +48,16 @@ async function auth(req, res, next) {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.resolve(__dirname, '../tmp'));
+    cb(null, tempDir);
   },
   filename: function (req, file, cb) {
-    cb(null, Math.random() + file.originalname);
+    cb(null, file.originalname);
   },
+  limits: { fileSise: 2048 },
 });
 
 const upload = multer({
   storage,
-  // limits: {},
 });
 
 module.exports = {
