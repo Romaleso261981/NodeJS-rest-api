@@ -29,31 +29,6 @@ async function createContact(req, res, next) {
   });
 }
 
-// async function createContact(req, res, next) {
-//   const { name, email, phone } = req.body;
-//   const newContact = await Contact.create({
-//     name,
-//     email,
-//     phone,
-//   });
-
-//   User.contact.push({ _id: newContact._id });
-
-//   res.status(201).json(User.contact);
-// }
-// async function createContact(req, res, next) {
-//   const { name, email, phone } = req.body;
-//   const newContact = await Contact.create({
-//     name,
-//     email,
-//     phone,
-//   });
-
-//   User.contact.push({ _id: newContact._id });
-
-//   res.status(201).json(User.contact);
-// }
-
 async function getContact(req, res, next) {
   const { user } = req;
   const userWithContact = await User.findById(user._id).populate('contact', {
