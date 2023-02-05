@@ -1,8 +1,8 @@
 const { User } = require('../models/userSchema');
 const { NotFound } = require('http-errors');
 const { Contact } = require('../models/contactsSchema');
-// const path = require('path');
-// const fs = require('fs/promises');
+const path = require('path');
+const fs = require('fs/promises');
 
 async function getContacts(req, res, next) {
   const { user } = req;
@@ -55,27 +55,25 @@ async function deleteById(req, res, next) {
 }
 
 async function uploadImage(req, res, next) {
-  console.log('req.file', req.file);
-  // const { filename } = req.file;
-  // const tmpPath = path.resolve(__dirname, '../tmp', filename);
-  // const publicPath = path.resolve(__dirname, '../public', filename);
-  // try {
-  //   await fs.rename(tmpPath, publicPath);
-  // } catch (error) {
-  //   await fs.unlink(tmpPath);
-  //   throw error;
-  // }
+  const { filename } = req.file;
+  const tmpPath = path.resolve(__dirname, '../tmp', filename);
+  const publicPath = path.resolve(__dirname, '../public', filename);
+  try {
+    await fs.rename(tmpPath, publicPath);
+  } catch (error) {
+    await fs.unlink(tmpPath);
+    throw error;
+  }
 
-  // const movieId = req.params.id;
+  const contactId = req.params.id;
 
-  // const movie = await Contact.findById(movieId);
-  // movie.image = `/public/${filename}`;
-  // await movie.save();
+  const contact = await Contact.findById(contactId);
+  contact.image = `/public/${filename}`;
+  await contact.save();
 
   return res.json({
     data: {
-      ok: false,
-      // image: movie.image,
+      image: contact.image,
     },
   });
 }
