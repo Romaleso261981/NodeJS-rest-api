@@ -74,7 +74,7 @@ async function uploadImage(req, res, next) {
 
   return res.json({
     data: {
-      ok: true,
+      ok: false,
       // image: movie.image,
     },
   });

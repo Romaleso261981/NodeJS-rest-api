@@ -15,7 +15,7 @@ userRouter.post('/', tryCatchWrapper(auth), tryCatchWrapper(createContact));
 userRouter.delete('/:id', tryCatchWrapper(auth), tryCatchWrapper(deleteById));
 userRouter.patch(
   '/upLoad',
-  upload.single('image'),
+  upload.single('avatar'),
   tryCatchWrapper(uploadImage)
 );
 userRouter.get('/me', tryCatchWrapper(auth), tryCatchWrapper(me));

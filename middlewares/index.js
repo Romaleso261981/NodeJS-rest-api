@@ -5,7 +5,8 @@ const multer = require('multer');
 const path = require('path');
 
 const { JWT_SECRET } = process.env;
-const tempDir = path.join(__dirname, '../', 'temp');
+const tempDir = path.join(__dirname, '../', 'tmp');
+
 function validateBody(schema) {
   return (req, res, next) => {
     const { error } = schema.validate(req.body);
