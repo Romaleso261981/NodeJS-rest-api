@@ -55,7 +55,7 @@ async function deleteById(req, res, next) {
 }
 
 async function uploadImage(req, res, next) {
-  // console.log('req.file', req.file);
+  console.log('req.file', req.file);
   // const { filename } = req.file;
   // const tmpPath = path.resolve(__dirname, '../tmp', filename);
   // const publicPath = path.resolve(__dirname, '../public', filename);
