@@ -2,7 +2,6 @@ const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
 
-const contactsRouter = require('./routes/api/contacts');
 const { authRouter } = require('./routes/api/auth');
 const { userRouter } = require('./routes/api/user');
 const { errorHandler } = require('./helpers/helpers');
@@ -16,7 +15,6 @@ app.use(cors());
 app.use(express.json());
 app.use('/public', express.static('public'));
 
-app.use('/contacts', contactsRouter);
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
 
