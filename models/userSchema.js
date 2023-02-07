@@ -18,8 +18,13 @@ const userSchema = new Schema(
       enum: ['starter', 'pro', 'business'],
       default: 'starter',
     },
-    token: String,
-    contact: [mongoose.Types.ObjectId],
+    token: { type: String },
+    contact: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'contact',
+      },
+    ],
   },
   {
     timestamps: true, // adds createdAt and updatedAt fields
