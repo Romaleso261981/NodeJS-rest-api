@@ -21,6 +21,7 @@ async function getContacts(req, res, next) {
 
 async function createContact(req, res, next) {
   const { user } = req;
+  console.log(user);
   const { name, email, phone } = req.body;
   const newContact = await User.create({
     name,
