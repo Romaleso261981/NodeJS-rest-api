@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models/userSchema');
 const multer = require('multer');
 const path = require('path');
+const jimp = require('jimp');
 
 const { JWT_SECRET } = process.env;
 const tempDir = path.join(__dirname, '../', 'tmp');
@@ -57,6 +58,18 @@ const storage = multer.diskStorage({
   limits: { fileSise: 2048 },
 });
 
+function resize(w, h) {
+  return async (req, res, next) => {
+    console.log('do resize');
+    const { path } = req.file;
+    const image = await jimp.read(path);
+    await image.resize(w, h);
+    await image.writeAsync(path);
+
+    next();
+  };
+}
+
 const upload = multer({
   storage,
 });
@@ -65,4 +78,5 @@ module.exports = {
   validateBody,
   auth,
   upload,
+  resize,
 };

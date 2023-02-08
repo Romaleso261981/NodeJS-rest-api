@@ -3,7 +3,6 @@ function tryCatchWrapper(enpointFn) {
     try {
       await enpointFn(req, res, next);
     } catch (error) {
-      console.log('ndefononb');
       return next(error);
     }
   };
