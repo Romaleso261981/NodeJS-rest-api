@@ -3,6 +3,7 @@ const { NotFound } = require('http-errors');
 const { Contact } = require('../models/contactsSchema');
 const path = require('path');
 const fs = require('fs/promises');
+const jimp = require('jimp');
 
 async function getContacts(req, res, next) {
   const { user } = req;
@@ -55,6 +56,11 @@ async function deleteById(req, res, next) {
 async function uploadImage(req, res, next) {
   const { filename } = req.file;
   const tmpPath = path.resolve(__dirname, '../tmp', filename);
+
+  const image = await jimp.read(tmpPath);
+  await image.resize(50, 50);
+  await image.writeAsync(tmpPath);
+
   const publicPath = path.resolve(__dirname, '../public', filename);
   try {
     await fs.rename(tmpPath, publicPath);
@@ -65,7 +71,6 @@ async function uploadImage(req, res, next) {
 
   const { user } = req;
   const contact = await User.findById(user._id);
-  console.log(user._id);
 
   contact.image = `/public/${filename}`;
   await contact.save();
