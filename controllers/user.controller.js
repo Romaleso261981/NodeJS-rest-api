@@ -63,17 +63,14 @@ async function uploadImage(req, res, next) {
     throw error;
   }
 
-  const contactId = req.params.id;
+  const { user } = req;
+  const contact = await User.findById(user._id);
+  console.log(user._id);
 
-  const contact = await Contact.findById(contactId);
   contact.image = `/public/${filename}`;
   await contact.save();
 
-  return res.json({
-    data: {
-      image: contact.image,
-    },
-  });
+  return res.json({ user: contact });
 }
 
 async function me(req, res, next) {

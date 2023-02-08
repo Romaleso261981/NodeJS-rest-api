@@ -18,6 +18,10 @@ const userSchema = new Schema(
       enum: ['starter', 'pro', 'business'],
       default: 'starter',
     },
+    image: {
+      type: String,
+      default: '',
+    },
     token: { type: String },
     contact: [
       {
