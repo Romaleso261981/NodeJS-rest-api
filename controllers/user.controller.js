@@ -21,9 +21,8 @@ async function getContacts(req, res, next) {
 
 async function createContact(req, res, next) {
   const { user } = req;
-  console.log(user);
   const { name, email, phone } = req.body;
-  const newContact = await User.create({
+  const newContact = await Contact.create({
     name,
     email,
     phone,
@@ -35,8 +34,6 @@ async function createContact(req, res, next) {
   const updatedUser = await User.findByIdAndUpdate(user._id, user, {
     new: true,
   }).select({ contact: 1, _id: 0 });
-
-  console.log('updatedUser', updatedUser);
 
   return res.status(201).json({
     data: {
@@ -66,17 +63,14 @@ async function uploadImage(req, res, next) {
     throw error;
   }
 
-  const contactId = req.params.id;
+  const { user } = req;
+  const contact = await User.findById(user._id);
+  console.log(user._id);
 
-  const contact = await Contact.findById(contactId);
   contact.image = `/public/${filename}`;
   await contact.save();
 
-  return res.json({
-    data: {
-      image: contact.image,
-    },
-  });
+  return res.json({ user: contact });
 }
 
 async function me(req, res, next) {
