@@ -83,6 +83,7 @@ async function currentUserController(req, res) {
     subscription,
   });
 }
+
 module.exports = {
   register,
   login,
