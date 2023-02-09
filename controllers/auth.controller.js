@@ -1,8 +1,9 @@
-// const { createUser, findUserByEmail } = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { Conflict, Unauthorized } = require('http-errors');
 const { User } = require('../models/userSchema');
+const { nodemailerSendMail } = require('../helpers/sendMailer');
+const { v4 } = require('uuid');
 
 async function register(req, res, next) {
   const { email, password } = req.body;
@@ -11,9 +12,16 @@ async function register(req, res, next) {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   try {
+    const verifyToken = v4();
     const savedUser = await User.create({
       email,
       password: hashedPassword,
+    });
+
+    await nodemailerSendMail({
+      to: email,
+      subject: 'Please confirm your email',
+      html: `<a href="localhost:3001/api/users/verify/${verifyToken}">Confirm your email</a>`,
     });
 
     res.status(201).json({
