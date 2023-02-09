@@ -12,16 +12,18 @@ async function register(req, res, next) {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   try {
-    const verifyToken = v4();
+    const verificationToken = v4();
     const savedUser = await User.create({
       email,
       password: hashedPassword,
+      verificationToken,
+      verified: false,
     });
 
     await nodemailerSendMail({
       to: email,
       subject: 'Please confirm your email',
-      html: `<a href="localhost:3001/api/users/verify/${verifyToken}">Confirm your email</a>`,
+      html: `<a href="localhost:8081/auth/verify/${verificationToken}">Confirm your email</a>`,
     });
 
     res.status(201).json({

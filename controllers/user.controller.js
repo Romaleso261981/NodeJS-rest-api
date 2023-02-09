@@ -1,5 +1,5 @@
 const { User } = require('../models/userSchema');
-const { NotFound } = require('http-errors');
+const { NotFound, BadRequest } = require('http-errors');
 const { Contact } = require('../models/contactsSchema');
 const path = require('path');
 const fs = require('fs/promises');
@@ -92,10 +92,32 @@ async function me(req, res, next) {
   });
 }
 
+async function verifyEmail(req, res, next) {
+  console.log('verifyEmail');
+  const { token } = req.params;
+  const user = await User.findOne({
+    verificationToken: token,
+  });
+  console.log(user);
+
+  if (!user) {
+    throw BadRequest('Verify token is not valid!');
+  }
+
+  await User.findByIdAndUpdate(user._id, {
+    verified: true,
+    verificationToken: null,
+  });
+
+  return res.json({
+    message: 'Success',
+  });
+}
 module.exports = {
   createContact,
   getContacts,
   deleteById,
   uploadImage,
+  verifyEmail,
   me,
 };
