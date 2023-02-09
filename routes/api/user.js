@@ -21,7 +21,7 @@ userRouter.patch(
   tryCatchWrapper(uploadImage)
 );
 userRouter.get('/me', tryCatchWrapper(auth), tryCatchWrapper(me));
-userRouter.get('/verify/:token', tryCatchWrapper(verifyEmail));
+userRouter.get('/verify/:verificationToken', tryCatchWrapper(verifyEmail));
 
 module.exports = {
   userRouter,

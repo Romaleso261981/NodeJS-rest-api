@@ -94,9 +94,9 @@ async function me(req, res, next) {
 
 async function verifyEmail(req, res, next) {
   console.log('verifyEmail');
-  const { token } = req.params;
+  const { verificationToken } = req.params;
   const user = await User.findOne({
-    verificationToken: token,
+    verificationToken,
   });
   console.log(user);
 

@@ -23,7 +23,7 @@ async function register(req, res, next) {
     await nodemailerSendMail({
       to: email,
       subject: 'Please confirm your email',
-      html: `<a href="localhost:8081/auth/verify/${verificationToken}">Confirm your email</a>`,
+      html: `<a target="_blank" href="http://localhost:8081/user/verify/${verificationToken}">Confirm email</a>`,
     });
 
     res.status(201).json({
@@ -39,7 +39,7 @@ async function register(req, res, next) {
       throw Conflict('User with this email already exists!');
     }
 
-    throw error;
+    throw Conflict('я незнаю ');
   }
 }
 async function login(req, res, next) {
