@@ -113,11 +113,30 @@ async function verifyEmail(req, res, next) {
     message: 'Success',
   });
 }
+
+const verifyEmailAgain = async (req, res, next) => {
+  // try {
+  //   const { email } = req.body;
+  //   const user = await findUserByEmail(email);
+  //   if (user.verify)
+  //     throw BadRequest('Verification has already been passed');
+  //   if (user) {
+  //     await User.findByIdAndUpdate({ _id: user._id });
+  //     await sendEmail(user.email, user.verificationToken);
+  //     res.status(200).json({
+  //       message: 'Verification email sent',
+  //     });
+  //   }
+  // } catch (error) {
+  //   next(error);
+  // }
+};
 module.exports = {
   createContact,
   getContacts,
   deleteById,
   uploadImage,
   verifyEmail,
+  verifyEmailAgain,
   me,
 };
