@@ -115,20 +115,19 @@ async function verifyEmail(req, res, next) {
 
 const verifyEmailAgain = async (req, res, next) => {
   const { body } = req;
-  const { email, verified } = body;
+  const { email } = body;
   const verifiUser = await User.findOne({
     email,
   });
   console.log(email);
-  // console.log(email);
+  console.log(verifiUser);
 
-  if (!verified) {
-    throw NotFound('This user has not been verified');
-  }
+  // if (!verified) {
+  //   throw NotFound('This user has not been verified');
+  // }
 
   return res.json({
     message: 'this user has been verified',
-    verifiUser,
   });
 };
 module.exports = {
