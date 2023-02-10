@@ -23,7 +23,7 @@ userRouter.patch(
 );
 userRouter.get('/me', tryCatchWrapper(auth), tryCatchWrapper(me));
 userRouter.get('/verify/:verificationToken', tryCatchWrapper(verifyEmail));
-userRouter.post('/verify', tryCatchWrapper(verifyEmailAgain));
+userRouter.post('/verify', verifyEmailAgain);
 
 module.exports = {
   userRouter,

@@ -42,6 +42,7 @@ async function register(req, res, next) {
     throw Conflict('я незнаю ');
   }
 }
+
 async function login(req, res, next) {
   const { email, password } = req.body;
 
@@ -61,6 +62,7 @@ async function login(req, res, next) {
   if (!isPasswordValid) {
     throw Unauthorized('password is not valid');
   }
+
   const payload = { id: storedUser._id };
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
 
@@ -76,6 +78,7 @@ async function logoutController(req, res) {
   await User.findByIdAndUpdate(_id, { token: null });
   res.sendStatus(204);
 }
+
 async function currentUserController(req, res) {
   const { email, subscription } = req.user;
   return res.status(200).json({

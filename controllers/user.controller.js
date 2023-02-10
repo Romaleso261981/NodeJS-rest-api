@@ -93,7 +93,6 @@ async function me(req, res, next) {
 }
 
 async function verifyEmail(req, res, next) {
-  console.log('verifyEmail');
   const { verificationToken } = req.params;
   const user = await User.findOne({
     verificationToken,
@@ -115,21 +114,22 @@ async function verifyEmail(req, res, next) {
 }
 
 const verifyEmailAgain = async (req, res, next) => {
-  // try {
-  //   const { email } = req.body;
-  //   const user = await findUserByEmail(email);
-  //   if (user.verify)
-  //     throw BadRequest('Verification has already been passed');
-  //   if (user) {
-  //     await User.findByIdAndUpdate({ _id: user._id });
-  //     await sendEmail(user.email, user.verificationToken);
-  //     res.status(200).json({
-  //       message: 'Verification email sent',
-  //     });
-  //   }
-  // } catch (error) {
-  //   next(error);
-  // }
+  const { body } = req;
+  const { email, verified } = body;
+  const verifiUser = await User.findOne({
+    email,
+  });
+  console.log(email);
+  // console.log(email);
+
+  if (!verified) {
+    throw NotFound('This user has not been verified');
+  }
+
+  return res.json({
+    message: 'this user has been verified',
+    verifiUser,
+  });
 };
 module.exports = {
   createContact,
