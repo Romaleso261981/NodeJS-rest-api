@@ -1,8 +1,9 @@
 const { User } = require('../models/userSchema');
-const { NotFound } = require('http-errors');
+const { NotFound, BadRequest } = require('http-errors');
 const { Contact } = require('../models/contactsSchema');
 const path = require('path');
 const fs = require('fs/promises');
+const jimp = require('jimp');
 
 async function getContacts(req, res, next) {
   const { user } = req;
@@ -55,6 +56,11 @@ async function deleteById(req, res, next) {
 async function uploadImage(req, res, next) {
   const { filename } = req.file;
   const tmpPath = path.resolve(__dirname, '../tmp', filename);
+
+  const image = await jimp.read(tmpPath);
+  await image.resize(50, 50);
+  await image.writeAsync(tmpPath);
+
   const publicPath = path.resolve(__dirname, '../public', filename);
   try {
     await fs.rename(tmpPath, publicPath);
@@ -65,7 +71,6 @@ async function uploadImage(req, res, next) {
 
   const { user } = req;
   const contact = await User.findById(user._id);
-  console.log(user._id);
 
   contact.image = `/public/${filename}`;
   await contact.save();
@@ -87,10 +92,50 @@ async function me(req, res, next) {
   });
 }
 
+async function verifyEmail(req, res, next) {
+  const { verificationToken } = req.params;
+  const user = await User.findOne({
+    verificationToken,
+  });
+  console.log(user);
+
+  if (!user) {
+    throw BadRequest('Verify token is not valid!');
+  }
+
+  await User.findByIdAndUpdate(user._id, {
+    verified: true,
+    verificationToken: null,
+  });
+
+  return res.json({
+    message: 'Success',
+  });
+}
+
+const verifyEmailAgain = async (req, res, next) => {
+  const { body } = req;
+  const { email } = body;
+  const verifiUser = await User.findOne({
+    email,
+  });
+  console.log(email);
+  console.log(verifiUser);
+
+  // if (!verified) {
+  //   throw NotFound('This user has not been verified');
+  // }
+
+  return res.json({
+    message: 'this user has been verified',
+  });
+};
 module.exports = {
   createContact,
   getContacts,
   deleteById,
   uploadImage,
+  verifyEmail,
+  verifyEmailAgain,
   me,
 };

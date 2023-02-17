@@ -1,8 +1,9 @@
-// const { createUser, findUserByEmail } = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { Conflict, Unauthorized } = require('http-errors');
 const { User } = require('../models/userSchema');
+const { nodemailerSendMail } = require('../helpers/sendMailer');
+const { v4 } = require('uuid');
 
 async function register(req, res, next) {
   const { email, password } = req.body;
@@ -11,9 +12,18 @@ async function register(req, res, next) {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   try {
+    const verificationToken = v4();
     const savedUser = await User.create({
       email,
       password: hashedPassword,
+      verificationToken,
+      verified: false,
+    });
+
+    await nodemailerSendMail({
+      to: email,
+      subject: 'Please confirm your email',
+      html: `<a target="_blank" href="http://localhost:8081/user/verify/${verificationToken}">Confirm email</a>`,
     });
 
     res.status(201).json({
@@ -29,9 +39,10 @@ async function register(req, res, next) {
       throw Conflict('User with this email already exists!');
     }
 
-    throw error;
+    throw Conflict('я незнаю ');
   }
 }
+
 async function login(req, res, next) {
   const { email, password } = req.body;
 
@@ -42,11 +53,16 @@ async function login(req, res, next) {
     throw Unauthorized('email is not valid');
   }
 
+  if (!storedUser.verified) {
+    throw Unauthorized('email is not verified! Please check your mail box');
+  }
+
   const isPasswordValid = await bcrypt.compare(password, storedUser.password);
 
   if (!isPasswordValid) {
     throw Unauthorized('password is not valid');
   }
+
   const payload = { id: storedUser._id };
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
 
@@ -62,6 +78,7 @@ async function logoutController(req, res) {
   await User.findByIdAndUpdate(_id, { token: null });
   res.sendStatus(204);
 }
+
 async function currentUserController(req, res) {
   const { email, subscription } = req.user;
   return res.status(200).json({
@@ -69,6 +86,7 @@ async function currentUserController(req, res) {
     subscription,
   });
 }
+
 module.exports = {
   register,
   login,

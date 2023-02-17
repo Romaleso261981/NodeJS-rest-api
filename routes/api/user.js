@@ -5,6 +5,8 @@ const {
   getContacts,
   deleteById,
   uploadImage,
+  verifyEmail,
+  verifyEmailAgain,
   me,
 } = require('../../controllers/user.controller');
 const { auth, upload } = require('../../middlewares');
@@ -20,6 +22,8 @@ userRouter.patch(
   tryCatchWrapper(uploadImage)
 );
 userRouter.get('/me', tryCatchWrapper(auth), tryCatchWrapper(me));
+userRouter.get('/verify/:verificationToken', tryCatchWrapper(verifyEmail));
+userRouter.post('/verify', verifyEmailAgain);
 
 module.exports = {
   userRouter,

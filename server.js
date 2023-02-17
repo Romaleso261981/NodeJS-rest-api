@@ -11,6 +11,7 @@ const PORT = process.env.PORT || 8081;
 
 async function main() {
   try {
+    console.log('Database connected...........');
     await mongoose.connect(HOST_URI);
     console.log('Database connection successful');
     app.listen(PORT, err => {
