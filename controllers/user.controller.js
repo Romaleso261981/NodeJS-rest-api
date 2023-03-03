@@ -1,93 +1,40 @@
-const { User } = require('../models/userSchema');
-const { NotFound } = require('http-errors');
-const { Contact } = require('../models/contactsSchema');
-const path = require('path');
-const fs = require('fs/promises');
+const { Order } = require('../models/order');
 
-async function getContacts(req, res, next) {
-  const { user } = req;
-  // const userWithContact = await User.findById(user._id).populate('contact', {
-  //   phone: 1,
-  //   name: 1,
-  //   email: 1,
-  // });
-
-  res.status(200).json({
-    user,
-    ok: true,
-  });
-}
+async function getContacts(req, res, next) {}
 
 async function createContact(req, res, next) {
-  // const { user } = req;
-  const data = req.body;
-  // const newContact = await Contact.create({
-  //   name,
-  //   email,
-  //   phone,
-  // });
-
-  // const { _id } = newContact;
-  // user.contact.push({ _id });
-
-  // const updatedUser = await User.findByIdAndUpdate(user._id, user, {
-  //   new: true,
-  // }).select({ contact: 1, _id: 0 });
-
-  return res.status(201).json({
-    data,
-  });
-}
-
-async function deleteById(req, res, next) {
-  const { id } = req.params;
-  const contact = await Contact.findById(id);
-  if (!contact) {
-    NotFound('No contact');
-  }
-  await Contact.findByIdAndRemove(id);
-  return res.status(200).json(contact);
-}
-
-async function uploadImage(req, res, next) {
-  const { filename } = req.file;
-  const tmpPath = path.resolve(__dirname, '../tmp', filename);
-  const publicPath = path.resolve(__dirname, '../public', filename);
   try {
-    await fs.rename(tmpPath, publicPath);
+    const respons = req.body;
+    const {
+      name,
+      adress,
+      completeSet,
+      modelTechniques,
+      nameTechniques,
+      malfunction,
+      serialNumber,
+      phone,
+    } = respons;
+
+    const savedOrder = await Order.create({
+      name,
+      adress,
+      completeSet,
+      modelTechniques,
+      nameTechniques,
+      malfunction,
+      serialNumber,
+      phone,
+    });
+    res.status(200).json({
+      savedOrder,
+    });
   } catch (error) {
-    await fs.unlink(tmpPath);
-    throw error;
+    console.log(error.message);
   }
-
-  const { user } = req;
-  const contact = await User.findById(user._id);
-  console.log(user._id);
-
-  contact.image = `/public/${filename}`;
-  await contact.save();
-
-  return res.json({ user: contact });
-}
-
-async function me(req, res, next) {
-  const { user } = req;
-  const { email, _id: id } = user;
-
-  return res.status(200).json({
-    data: {
-      user: {
-        email,
-        id,
-      },
-    },
-  });
 }
 
 module.exports = {
   createContact,
   getContacts,
-  deleteById,
-  uploadImage,
-  me,
 };
