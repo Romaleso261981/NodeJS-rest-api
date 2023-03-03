@@ -48,19 +48,26 @@ async function login(req, res, next) {
     throw Unauthorized('password is not valid');
   }
   const payload = { id: storedUser._id };
-  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
+  const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: '24h',
+  });
 
   return res.json({
-    data: {
-      token: token,
+    payload: {
+      user: {
+        email,
+      },
+      accessToken,
     },
   });
 }
 
 async function logoutController(req, res) {
-  const { _id } = req.user;
-  await User.findByIdAndUpdate(_id, { token: null });
-  res.sendStatus(204);
+  // const { _id } = req.user;
+  // await User.findByIdAndUpdate(_id, { token: null });
+  return res.status(200).json({
+    ok: true,
+  });
 }
 async function currentUserController(req, res) {
   const { email, subscription } = req.user;

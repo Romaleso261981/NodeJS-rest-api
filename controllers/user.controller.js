@@ -6,39 +6,36 @@ const fs = require('fs/promises');
 
 async function getContacts(req, res, next) {
   const { user } = req;
-  const userWithContact = await User.findById(user._id).populate('contact', {
-    phone: 1,
-    name: 1,
-    email: 1,
-  });
+  // const userWithContact = await User.findById(user._id).populate('contact', {
+  //   phone: 1,
+  //   name: 1,
+  //   email: 1,
+  // });
 
   res.status(200).json({
-    data: {
-      contacts: userWithContact.contact,
-    },
+    user,
+    ok: true,
   });
 }
 
 async function createContact(req, res, next) {
-  const { user } = req;
-  const { name, email, phone } = req.body;
-  const newContact = await Contact.create({
-    name,
-    email,
-    phone,
-  });
+  // const { user } = req;
+  const data = req.body;
+  // const newContact = await Contact.create({
+  //   name,
+  //   email,
+  //   phone,
+  // });
 
-  const { _id } = newContact;
-  user.contact.push({ _id });
+  // const { _id } = newContact;
+  // user.contact.push({ _id });
 
-  const updatedUser = await User.findByIdAndUpdate(user._id, user, {
-    new: true,
-  }).select({ contact: 1, _id: 0 });
+  // const updatedUser = await User.findByIdAndUpdate(user._id, user, {
+  //   new: true,
+  // }).select({ contact: 1, _id: 0 });
 
   return res.status(201).json({
-    data: {
-      contact: updatedUser.contact,
-    },
+    data,
   });
 }
 

@@ -10,9 +10,9 @@ const {
 const { auth, upload } = require('../../middlewares');
 const userRouter = express.Router();
 
-userRouter.get('/', tryCatchWrapper(auth), tryCatchWrapper(getContacts));
-userRouter.post('/', tryCatchWrapper(auth), tryCatchWrapper(createContact));
-userRouter.delete('/:id', tryCatchWrapper(auth), tryCatchWrapper(deleteById));
+userRouter.get('/', tryCatchWrapper(getContacts));
+userRouter.post('/', tryCatchWrapper(createContact));
+userRouter.delete('/:id', tryCatchWrapper(deleteById));
 userRouter.patch(
   '/upLoad',
   tryCatchWrapper(auth),
