@@ -1,3 +1,4 @@
+// const { boolean } = require('joi');
 const { Schema, model } = require('mongoose');
 
 const Contactschema = Schema;
@@ -36,6 +37,15 @@ const contactSchema = new Contactschema(
       type: String,
       required: [true, 'Set name for serialNumber'],
     },
+    repaired: {
+      type: String,
+      default: "inWork",
+    },
+    type: {
+      type: String,
+      enum: ["done", "inWork"],
+      default: "inWork",
+    },
   },
   {
     versionKey: false,
@@ -46,5 +56,5 @@ const contactSchema = new Contactschema(
 const Order = model('contact', contactSchema);
 
 module.exports = {
-    Order,
+  Order,
 };
