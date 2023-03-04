@@ -5,6 +5,9 @@ const Contactschema = Schema;
 
 const contactSchema = new Contactschema(
   {
+    number: {
+      type: String,
+    },
     name: {
       type: String,
       required: [true, 'Set name for name'],
@@ -19,7 +22,7 @@ const contactSchema = new Contactschema(
     },
     completeSet: {
       type: String,
-      required: [true, 'Set name for completeSet'],
+      default: "нічого",
     },
     modelTechniques: {
       type: String,

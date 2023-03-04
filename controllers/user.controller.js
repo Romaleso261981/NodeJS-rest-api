@@ -1,8 +1,13 @@
 const { Order } = require('../models/order');
+let n = 1;
+
+const setNumber = function () {
+  n += 1;
+  return n;
+};
 
 async function getContacts(req, res, next) {
-
-  const { type = "inWork" } = req.query;
+  const { type = 'inWork' } = req.query;
   try {
     const searchParam = { type };
     const result = await Order.find(searchParam);
@@ -26,8 +31,10 @@ async function createContact(req, res, next) {
       serialNumber,
       phone,
     } = respons;
+    const number = setNumber();
 
     const savedOrder = await Order.create({
+      number,
       name,
       adress,
       completeSet,
@@ -49,4 +56,3 @@ module.exports = {
   createContact,
   getContacts,
 };
-
