@@ -6,12 +6,12 @@ const mongoose = require('mongoose');
 mongoose.set('debug', true);
 mongoose.set('strictQuery', true);
 
-const { HOST_URI } = process.env;
+// const { HOST_URI } = process.env;
 const PORT = process.env.PORT || 8081;
 
 async function main() {
   try {
-    await mongoose.connect(HOST_URI);
+    await mongoose.connect("mongodb+srv://admin:1qy8t44qN04n7Pzt@cluster0.pihsrlv.mongodb.net/?retryWrites=true&w=majority");
     console.log('Database connection successful');
     app.listen(PORT, err => {
       if (err) {
