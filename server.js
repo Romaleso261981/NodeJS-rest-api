@@ -7,7 +7,7 @@ mongoose.set('debug', true);
 mongoose.set('strictQuery', true);
 
 // const { HOST_URI } = process.env;
-const PORT = process.env.PORT || 8081;
+const PORT = process.env.PORT || 8080;
 
 async function main() {
   try {
