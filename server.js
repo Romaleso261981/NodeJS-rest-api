@@ -21,6 +21,8 @@ async function main() {
       }
       console.log(`Server is running. Use our API on port: ${PORT}`);
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log('Database connection error');
+  }
 }
 main();
