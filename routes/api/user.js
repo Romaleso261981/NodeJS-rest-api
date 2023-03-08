@@ -12,7 +12,7 @@ const userRouter = express.Router();
 
 userRouter.get('/', getContacts);
 userRouter.post('/add', createContact);
-userRouter.delete('/:id', tryCatchWrapper(deleteById));
+userRouter.delete('/:id', deleteById);
 userRouter.patch(
   '/upLoad',
   tryCatchWrapper(auth),

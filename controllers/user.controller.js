@@ -6,10 +6,32 @@ const setNumber = function () {
   return n;
 };
 
-async function getContacts(req, res, next) {
-  const { type = 'inWork' } = req.query;
+async function deleteById(req, res, next) {
+  const contactId = req.params.id;
   try {
-    const searchParam = { type };
+    const contact = await Order.findById(contactId);
+    if (contact.type === 'done') {
+      contact.type = 'inWork';
+    } else {
+      contact.type = 'done';
+    }
+    await contact.save();
+    const newContact = await Order.findById(contactId);
+
+    return res.json({
+      data: {
+        newContact,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
+
+async function getContacts(req, res, next) {
+  const { repaired = 'inWork' } = req.query;
+  try {
+    const searchParam = { repaired };
     const result = await Order.find(searchParam);
 
     return res.status(200).json(result);
@@ -55,4 +77,5 @@ async function createContact(req, res, next) {
 module.exports = {
   createContact,
   getContacts,
+  deleteById,
 };
