@@ -34,7 +34,6 @@ async function auth(req, res, next) {
   try {
     const { id } = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(id);
-    console.log(user);
     req.user = user;
   } catch (error) {
     if (
@@ -61,7 +60,6 @@ const storage = multer.diskStorage({
 
 function resize(w, h) {
   return async (req, res, next) => {
-    console.log('do resize');
     const { path } = req.file;
     const image = await jimp.read(path);
     await image.resize(w, h);

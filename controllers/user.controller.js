@@ -29,9 +29,9 @@ async function deleteById(req, res, next) {
 }
 
 async function getContacts(req, res, next) {
-  const { repaired = 'inWork' } = req.query;
+  const { type = 'expenses', month = 0, year = 0 } = req.query;
   try {
-    const searchParam = { repaired };
+    const searchParam = { type, month, year };
     const result = await Order.find(searchParam);
 
     return res.status(200).json(result);

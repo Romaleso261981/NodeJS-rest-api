@@ -10,8 +10,8 @@ const {
 const { auth, upload } = require('../../middlewares');
 const userRouter = express.Router();
 
-userRouter.get('/', getContacts);
-userRouter.post('/add', createContact);
+userRouter.get('/api/finances/', getContacts);
+userRouter.post('/api/finances/add', createContact);
 userRouter.delete('/:id', deleteById);
 userRouter.patch(
   '/upLoad',
