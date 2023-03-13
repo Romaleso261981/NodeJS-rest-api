@@ -7,47 +7,47 @@ const contactSchema = new Contactschema(
   {
     number: {
       type: String,
+      default: '',
     },
     name: {
       type: String,
-      required: [true, 'Set name for name'],
+      default: '',
     },
     phone: {
       type: String,
-      required: [true, 'Set name for phone'],
+      default: '',
     },
     adress: {
       type: String,
-      required: [true, 'Set name for adress'],
+      default: '',
     },
     completeSet: {
       type: String,
-      default: "нічого",
+      default: 'нічого',
     },
     modelTechniques: {
       type: String,
-      required: [true, 'Set name for modelTechniques'],
     },
     nameTechniques: {
       type: String,
-      required: [true, 'Set name for nameTechniques'],
+      required: [true, 'Set name for modelTechniques'],
     },
     malfunction: {
       type: String,
-      required: [true, 'Set name for malfunction'],
+      default: '',
     },
     serialNumber: {
       type: String,
-      required: [true, 'Set name for serialNumber'],
+      default: '',
     },
     repaired: {
       type: String,
-      default: "inWork",
+      default: 'inWork',
     },
     type: {
       type: String,
-      enum: ["done", "inWork"],
-      default: "inWork",
+      enum: ['done', 'inWork'],
+      default: 'inWork',
     },
   },
   {
