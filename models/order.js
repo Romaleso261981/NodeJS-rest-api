@@ -44,6 +44,10 @@ const contactSchema = new Contactschema(
       type: String,
       default: '',
     },
+    cost: {
+      type: String,
+      default: 0,
+    },
     repaired: {
       type: String,
       default: 'inWork',
