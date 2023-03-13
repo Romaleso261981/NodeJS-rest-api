@@ -40,6 +40,10 @@ const contactSchema = new Contactschema(
       type: String,
       default: '',
     },
+    descriptionRepair: {
+      type: String,
+      default: '',
+    },
     repaired: {
       type: String,
       default: 'inWork',
