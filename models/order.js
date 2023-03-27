@@ -5,6 +5,10 @@ const Contactschema = Schema;
 
 const contactSchema = new Contactschema(
   {
+    date: {
+      type: Date,
+      default: Date.now,
+    },
     number: {
       type: String,
       default: '',
